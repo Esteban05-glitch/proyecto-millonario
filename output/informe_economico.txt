@@ -1,0 +1,47 @@
+=== INFORME ECONÓMICO ===
+Generado el: 2025-08-30 16:18:22
+
+
+=== PIB PER CÁPITA ===
+Últimos datos disponibles por país:
+
+         Pais  Año        Valor
+       Brazil 2024 10280.314862
+       Canada 2024 54282.617605
+       Mexico 2024 14157.944584
+        Spain 2024 35297.009500
+United States 2024 85809.900385
+
+
+=== INFLACIÓN ANUAL ===
+Últimos datos disponibles por país:
+
+         Pais  Año    Valor
+       Brazil 2024 4.367464
+       Canada 2024 2.381584
+       Mexico 2024 4.722256
+        Spain 2024 2.774178
+United States 2024 2.949525
+
+
+=== TASA DE DESEMPLEO ===
+Últimos datos disponibles por país:
+
+         Pais  Año  Valor
+       Brazil 2024  7.634
+       Canada 2024  6.450
+       Mexico 2024  2.711
+        Spain 2024 11.394
+United States 2024  4.106
+
+
+=== CRECIMIENTO DEL PIB ===
+Últimos datos disponibles por país:
+
+         Pais  Año    Valor
+       Brazil 2024 3.395866
+       Canada 2024 1.528081
+       Mexico 2024 1.454062
+        Spain 2024 3.150196
+United States 2024 2.796190
+
