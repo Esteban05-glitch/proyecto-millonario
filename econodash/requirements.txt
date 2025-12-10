@@ -9,3 +9,4 @@ streamlit>=1.32.0
 streamlit-option-menu>=0.3.6  # Para menús desplegables
 streamlit-extras>=0.3.0  # Versión compatible con Python 3.13
 openpyxl
+kaleido
