@@ -101,7 +101,7 @@ def generar_grafico_interactivo(datos, indicador_info, ruta_guardado):
     
     # También guardar como imagen estática
     ruta_imagen = os.path.join(ruta_guardado, f"{indicador_info['nombre'].lower().replace(' ', '_')}.png")
-    fig.write_image(ruta_imagen, scale=2)
+    # fig.write_image(ruta_imagen, scale=2)
     
     return ruta_completa, ruta_imagen
 
