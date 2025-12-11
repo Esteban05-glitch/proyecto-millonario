@@ -6,6 +6,14 @@ import world_bank_data as wb
 from datetime import datetime
 import os
 from streamlit_option_menu import option_menu
+import plotly.io as pio
+
+# --------- FIX PARA STREAMLIT CLOUD ----------
+# Prevenir que Plotly use Kaleido (evita error de Chrome)
+pio.kaleido.scope.mathjax = None
+pio.renderers.default = "browser"
+# ---------------------------------------------
+
 
 # Configuración de la página
 st.set_page_config(
