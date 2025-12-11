@@ -7,10 +7,12 @@ from datetime import datetime
 import os
 from streamlit_option_menu import option_menu
 
+# ------------ FIX DEFINITIVO PARA STREAMLIT CLOUD ----------------
 import plotly.io as pio
 pio.renderers.default = "browser"     
 pio.kaleido.scope.mathjax = None      
-pio.kaleido.scope.chromium_args = () 
+pio.kaleido.scope.chromium_args = ()  
+# -----------------------------------------------------------------
 
 # Configuración de la página
 st.set_page_config(
@@ -26,7 +28,6 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Definición de indicadores
 INDICADORES = {
-    # Indicadores macroeconómicos básicos
     'NY.GDP.PCAP.CD': {
         'nombre': 'PIB per cápita',
         'unidad': 'US$',
@@ -49,81 +50,71 @@ INDICADORES = {
         'nombre': 'Tasa de desempleo',
         'unidad': '%',
         'es_porcentaje': True,
-        'descripcion': 'Porcentaje de la población activa que no tiene empleo pero busca trabajo y está disponible para trabajar. Un indicador clave del mercado laboral.'
+        'descripcion': 'Porcentaje de la población activa que no tiene empleo pero busca trabajo y está disponible para trabajar.'
     },
-    
-    # Indicadores fiscales y de deuda
     'GC.DOD.TOTL.GD.ZS': {
         'nombre': 'Deuda Pública',
         'unidad': '% del PIB',
         'es_porcentaje': True,
-        'descripcion': 'Deuda bruta del gobierno general como porcentaje del PIB. Indica la sostenibilidad de la deuda pública de un país.'
+        'descripcion': 'Deuda bruta del gobierno general como porcentaje del PIB.'
     },
-    
-    # Comercio exterior
     'NE.EXP.GNFS.ZS': {
         'nombre': 'Exportaciones',
         'unidad': '% del PIB',
         'es_porcentaje': True,
-        'descripcion': 'Exportaciones de bienes y servicios como porcentaje del PIB. Mide la importancia del sector exportador en la economía.'
+        'descripcion': 'Exportaciones de bienes y servicios como porcentaje del PIB.'
     },
     'NE.IMP.GNFS.ZS': {
         'nombre': 'Importaciones',
         'unidad': '% del PIB',
         'es_porcentaje': True,
-        'descripcion': 'Importaciones de bienes y servicios como porcentaje del PIB. Indica la dependencia de bienes y servicios del exterior.'
+        'descripcion': 'Importaciones de bienes y servicios como porcentaje del PIB.'
     },
     'BX.KLT.DINV.WD.GD.ZS': {
         'nombre': 'Inversión Extranjera Directa',
         'unidad': '% del PIB',
         'es_porcentaje': True,
-        'descripcion': 'Inversión Extranjera Directa, entradas netas como porcentaje del PIB. Mide la confianza de los inversores extranjeros en la economía.'
+        'descripcion': 'Entradas netas de IED como porcentaje del PIB.'
     },
-    
-    # Gasto social
     'SE.XPD.TOTL.GD.ZS': {
         'nombre': 'Gasto en Educación',
         'unidad': '% del PIB',
         'es_porcentaje': True,
-        'descripcion': 'Gasto público en educación como porcentaje del PIB. Indica la prioridad que da un país a la educación.'
+        'descripcion': 'Gasto público total en educación como porcentaje del PIB.'
     },
     'SH.XPD.CHEX.GD.ZS': {
         'nombre': 'Gasto en Salud',
         'unidad': '% del PIB',
         'es_porcentaje': True,
-        'descripcion': 'Gasto en salud como porcentaje del PIB. Refleja la inversión en servicios de salud pública y privada.'
+        'descripcion': 'Gasto en salud como porcentaje del PIB.'
     },
-    
-    # Indicadores demográficos
     'SP.DYN.LE00.IN': {
         'nombre': 'Esperanza de Vida',
         'unidad': 'años',
         'es_porcentaje': False,
-        'descripcion': 'Esperanza de vida al nacer, total en años. Un indicador clave del nivel de desarrollo y calidad de vida de un país.'
+        'descripcion': 'Esperanza de vida al nacer, en años.'
     },
     'SP.POP.TOTL': {
         'nombre': 'Población Total',
         'unidad': 'personas',
         'es_porcentaje': False,
-        'descripcion': 'Población total basada en la definición de facto de población, que cuenta a todos los residentes independientemente de su estatus legal o ciudadanía.'
+        'descripcion': 'Población total medida por residencia.'
     },
-    
-    # Indicadores de desarrollo
     'SI.POV.GINI': {
         'nombre': 'Coeficiente de Gini',
         'unidad': 'índice',
         'es_porcentaje': False,
-        'descripcion': 'Mide la desigualdad en la distribución del ingreso, donde 0 representa igualdad perfecta y 1 representa desigualdad perfecta.'
+        'descripcion': 'Índice de desigualdad del ingreso.'
     },
     'NY.GDP.PCAP.PP.CD': {
         'nombre': 'PIB per cápita (PPA)',
         'unidad': 'US$',
         'es_porcentaje': False,
-        'descripcion': 'PIB per cápita ajustado por paridad de poder adquisitivo. Permite comparar el nivel de vida entre países.'
+        'descripcion': 'PIB per cápita ajustado por PPP.'
     }
 }
 
-# Diccionario de países (código: nombre)
+# Diccionario de países
 PAISES = {
     'MEX': 'México',
     'USA': 'Estados Unidos',
