@@ -7,13 +7,12 @@ from datetime import datetime
 import os
 from streamlit_option_menu import option_menu
 
-# Configuración de Plotly para producción
+# ------------ FIX DEFINITIVO PARA STREAMLIT CLOUD ----------------
 import plotly.io as pio
-if not hasattr(pio, 'kaleido'):
-    pio.renderers.default = "png"
-else:
-    pio.kaleido.scope.mathjax = None
-    pio.kaleido.scope.chromium_args = ('--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage')
+pio.renderers.default = "browser"     
+pio.kaleido.scope.mathjax = None      
+pio.kaleido.scope.chromium_args = ()  
+# -----------------------------------------------------------------
 
 # Configuración de la página
 st.set_page_config(
