@@ -639,24 +639,66 @@ def mostrar_sidebar() -> Tuple[List[str], List[str], int, int]:
     
     return codigos_indicadores, codigos_paises, anio_inicio, anio_fin
 
+def get_download_link(content: bytes, filename: str, button_text: str, file_type: str) -> str:
+    """Genera un enlace para descargar contenido en diferentes formatos."""
+    b64 = base64.b64encode(content).decode()
+    mime_types = {
+        'csv': 'text/csv',
+        'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'png': 'image/png',
+        'jpg': 'image/jpeg',
+        'pdf': 'application/pdf',
+        'svg': 'image/svg+xml'
+    }
+    mime_type = mime_types.get(file_type.lower(), 'application/octet-stream')
+    href = f'<a href="data:{mime_type};base64,{b64}" download="{filename}">{button_text}</a>'
+    return href
+
+def get_table_download_link(df: pd.DataFrame, filename: str, button_text: str) -> str:
+    """Genera un enlace para descargar un DataFrame como archivo CSV o Excel."""
+    if filename.endswith('.csv'):
+        content = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
+        return get_download_link(content, filename, button_text, 'csv')
+    elif filename.endswith('.xlsx'):
+        towrite = io.BytesIO()
+        df.to_excel(towrite, index=False, engine='openpyxl')
+        return get_download_link(towrite.getvalue(), filename, button_text, 'xlsx')
+    return ""
+
+def get_figure_download_link(fig, filename: str, button_text: str, width: int = 1200, height: int = 700) -> str:
+    """Genera un enlace para descargar una figura de Plotly como imagen."""
     try:
-        # Mapeo de formatos a extensiones y tipos MIME
-        formatos = {
-            'png': {'ext': 'png', 'mime': 'image/png'},
-            'jpeg': {'ext': 'jpg', 'mime': 'image/jpeg'},
-            'webp': {'ext': 'webp', 'mime': 'image/webp'},
-            'svg': {'ext': 'svg', 'mime': 'image/svg+xml'},
-            'pdf': {'ext': 'pdf', 'mime': 'application/pdf'}
-        }
+        # Determinar el formato basado en la extensión del archivo
+        if filename.lower().endswith('.png'):
+            img_bytes = fig.to_image(format='png', width=width, height=height, scale=2)
+            mime_type = 'image/png'
+        elif filename.lower().endswith(('.jpg', '.jpeg')):
+            img_bytes = fig.to_image(format='jpeg', width=width, height=height, scale=2)
+            mime_type = 'image/jpeg'
+        elif filename.lower().endswith('.pdf'):
+            img_bytes = fig.to_image(format='pdf', width=width, height=height)
+            mime_type = 'application/pdf'
+        elif filename.lower().endswith('.svg'):
+            img_bytes = fig.to_image(format='svg', width=width, height=height)
+            mime_type = 'image/svg+xml'
+        else:
+            return "Formato de archivo no soportado"
         
-        # Crear un expander para las opciones de descarga
-        with st.expander("📥 Opciones de descarga", expanded=False):
-            st.markdown("**Selecciona el formato de descarga:**")
-            formato_seleccionado = st.selectbox(
-                "Formato",
-                options=list(formatos.keys()),
-                format_func=lambda x: x.upper(),
-                key=f"formato_descarga_{filename}"
+        # Codificar en base64
+        b64 = base64.b64encode(img_bytes).decode()
+        
+        # Crear enlace de descarga
+        href = f'<a href="data:{mime_type};base64,{b64}" download="{filename}">{button_text}</a>'
+        return href
+        
+    except Exception as e:
+        st.error(f"Error al generar el enlace de descarga: {str(e)}")
+        return ""
+
+def mostrar_datos_tabulares(datos_por_indicador: Dict[str, pd.DataFrame]):
+    """Muestra los datos en formato tabular organizados por indicador con opciones de exportación."""
+    for codigo_indicador, df in datos_por_indicador.items():
+        if df.empty:
             continue
             
         nombre_indicador = INDICADORES.get(codigo_indicador, {}).get('nombre', codigo_indicador)
