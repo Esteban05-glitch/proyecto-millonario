@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import world_bank_data as wb
 import io
+import os
 import base64
 import plotly.io as pio
 from typing import Optional, Union, Dict, List, Tuple
@@ -666,29 +667,55 @@ def get_table_download_link(df: pd.DataFrame, filename: str, button_text: str) -
     return ""
 
 def get_figure_download_link(fig, filename: str, button_text: str, width: int = 1200, height: int = 700) -> str:
-    """Genera un enlace para descargar una figura de Plotly como imagen."""
+    """
+    Genera un enlace para descargar una figura de Plotly como archivo HTML interactivo.
+    
+    Args:
+        fig: Figura de Plotly a exportar
+        filename: Nombre del archivo (se forzará extensión .html)
+        button_text: Texto a mostrar en el botón de descarga
+        width: Ancho de la figura (píxeles)
+        height: Alto de la figura (píxeles)
+        
+    Returns:
+        str: Código HTML para el enlace de descarga
+    """
     try:
-        # Determinar el formato basado en la extensión del archivo
-        if filename.lower().endswith('.png'):
-            img_bytes = fig.to_image(format='png', width=width, height=height, scale=2)
-            mime_type = 'image/png'
-        elif filename.lower().endswith(('.jpg', '.jpeg')):
-            img_bytes = fig.to_image(format='jpeg', width=width, height=height, scale=2)
-            mime_type = 'image/jpeg'
-        elif filename.lower().endswith('.pdf'):
-            img_bytes = fig.to_image(format='pdf', width=width, height=height)
-            mime_type = 'application/pdf'
-        elif filename.lower().endswith('.svg'):
-            img_bytes = fig.to_image(format='svg', width=width, height=height)
-            mime_type = 'image/svg+xml'
-        else:
-            return "Formato de archivo no soportado"
+        # Asegurar que el archivo tenga extensión .html
+        if not filename.lower().endswith('.html'):
+            filename = os.path.splitext(filename)[0] + '.html'
+        
+        # Crear un archivo temporal en memoria
+        html_bytes = fig.to_html(full_html=False, include_plotlyjs='cdn', 
+                               default_width=f"{width}px", default_height=f"{height}px")
         
         # Codificar en base64
-        b64 = base64.b64encode(img_bytes).decode()
+        b64 = base64.b64encode(html_bytes.encode()).decode()
         
         # Crear enlace de descarga
-        href = f'<a href="data:{mime_type};base64,{b64}" download="{filename}">{button_text}</a>'
+        href = f'<a href="data:text/html;base64,{b64}" download="{filename}" class="download-button">{button_text}</a>'
+        
+        # Añadir estilo CSS para el botón
+        st.markdown("""
+        <style>
+            .download-button {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #0d6efd;
+                color: white !important;
+                text-decoration: none;
+                border-radius: 4px;
+                font-weight: 500;
+                transition: background-color 0.2s;
+            }
+            .download-button:hover {
+                background-color: #0b5ed7;
+                color: white !important;
+                text-decoration: none;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+        
         return href
         
     except Exception as e:
