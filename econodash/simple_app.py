@@ -995,48 +995,46 @@ def crear_grafico_indicador(df: pd.DataFrame, codigo_indicador: str, anio_inicio
     # Mostrar el gráfico
     st.plotly_chart(fig, use_container_width=True)
     
-    # Opciones de exportación
-    with st.expander("💾 Exportar gráfico", expanded=False):
-        st.markdown("**Exportar como imagen:**")
-        col1, col2, col3, col4 = st.columns(4)
+    # Botón de descarga único
+    nombre_archivo = f"{nombre_indicador.replace(' ', '_')}_{anio_inicio}-{anio_fin}"
+    
+    # Usar columnas para centrar el botón
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        st.markdown("""
+        <style>
+            .download-button {
+                display: block;
+                width: 100%;
+                padding: 12px 24px;
+                background-color: #4CAF50;
+                color: white !important;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: bold;
+                margin: 10px 0;
+                border-radius: 5px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .download-button:hover {
+                background-color: #45a049;
+                text-decoration: none;
+            }
+        </style>
+        """, unsafe_allow_html=True)
         
-        nombre_archivo = f"{nombre_indicador.replace(' ', '_')}_{anio_inicio}-{anio_fin}"
+        st.markdown(get_figure_download_link(
+            fig,
+            f"{nombre_archivo}.html",
+            "⬇️ Descargar Gráfico Interactivo",
+            width=1200,
+            height=700
+        ), unsafe_allow_html=True)
         
-        with col1:
-            st.markdown(get_figure_download_link(
-                fig, 
-                f"{nombre_archivo}.png", 
-                "📷 PNG",
-                width=1200,
-                height=700
-            ), unsafe_allow_html=True)
-            
-        with col2:
-            st.markdown(get_figure_download_link(
-                fig,
-                f"{nombre_archivo}.jpg",
-                "🖼️ JPG",
-                width=1200,
-                height=700
-            ), unsafe_allow_html=True)
-            
-        with col3:
-            st.markdown(get_figure_download_link(
-                fig,
-                f"{nombre_archivo}.pdf",
-                "📄 PDF",
-                width=1200,
-                height=700
-            ), unsafe_allow_html=True)
-            
-        with col4:
-            st.markdown(get_figure_download_link(
-                fig,
-                f"{nombre_archivo}.svg",
-                "🖌️ SVG",
-                width=1200,
-                height=700
-            ), unsafe_allow_html=True)
+        st.caption("El gráfico se descargará como un archivo HTML interactivo que puedes abrir en cualquier navegador.")
     
     # Mostrar estadísticas resumidas
     with st.expander("📊 Estadísticas resumidas", expanded=False):
